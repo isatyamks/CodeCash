@@ -18,8 +18,21 @@
 </div>
 
 <div class="content">
-    <h1>Welcome to the Index Page</h1>
-    <p>You have successfully logged in.</p>
+    <h1>Leaderboard</h1>
+    <table>
+        <tr>
+            <th>Name</th>
+            <th>Email</th>
+            <th>Signup Time</th>
+        </tr>
+        {% for user in users %}
+        <tr>
+            <td>{{ user.name }}</td>
+            <td>{{ user.email }}</td>
+            <td>{{ user.signup_time }}</td>
+        </tr>
+        {% endfor %}
+    </table>
 </div>
 
 </body>

@@ -95,9 +95,8 @@ def investment():
 @app.route('/leaderboard')
 @login_required
 def leaderboard():
-    return render_template('leaderboard.html')
-
-
+    users = users_collection.find()
+    return render_template('leaderboard.html', users=users)
 
 if __name__ == '__main__':
     app.run(debug=True)
