@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Index</title>
+    <title>Settings</title>
     <link rel="stylesheet" href="../static/styles/settings.css">
 </head>
 <body>
@@ -18,8 +18,18 @@
 </div>
 
 <div class="content">
-    <h1>Welcome to the Index Page</h1>
-    <p>You have successfully logged in.</p>
+    <h1>Settings</h1>
+    <div class="button-container">
+        <!-- Logout Button -->
+        <form action="{{ url_for('logout') }}" method="post">
+            <button type="submit" class="logout">Logout</button>
+        </form>
+        
+        <form action="{{ url_for('delete_account') }}" method="post" onsubmit="return confirm('Are you sure you want to delete your account? This action cannot be undone.');">
+            <button type="submit" class="delete_account">Delete Account</button>
+        </form>
+        
+    </div>
 </div>
 
 </body>

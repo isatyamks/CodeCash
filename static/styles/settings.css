@@ -22,7 +22,23 @@ body {
     background-color: #ddd;
     color: black;
 }
-
 .content {
     padding: 20px;
+}
+.button-container {
+    margin: 20px 0;
+}
+.button {
+    padding: 10px 20px;
+    font-size: 16px;
+    margin: 5px;
+    cursor: pointer;
+    border: none;
+    color: white;
+}
+.logout-button {
+    background-color: #f44336; /* Red */
+}
+.delete-button {
+    background-color: #555555; /* Dark Gray */
 }

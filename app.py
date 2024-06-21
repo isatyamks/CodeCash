@@ -3,6 +3,8 @@ from flask import Flask, render_template, request, redirect, url_for, flash, ses
 from pymongo import MongoClient
 from datetime import datetime
 
+
+
 app = Flask(__name__)
 app.secret_key = 'IITbombay4584'
 client = MongoClient('mongodb://localhost:27017')  # corrected the port
@@ -72,6 +74,34 @@ def signup():
     
     return render_template('signup.html')
 
+
+
+# Logout route
+@app.route('/logout')
+@login_required
+def logout():
+    session.pop('user', None)
+    return redirect(url_for('login'))
+
+# Delete account route
+
+
+
+@app.route('/delete_account', methods=['POST'])
+@login_required
+def delete_account():
+    if request.method == 'POST':
+        username = session.get('user')  # Assuming session['user'] contains the username
+        if username:
+            user = users_collection.find_one({'name': username})
+            if user:
+                email = user['email']  # Get the email from the user document
+                result = users_collection.delete_one({'email': email})
+                if result.deleted_count > 0:
+                    session.pop('user', None)
+                    return redirect(url_for('login'))
+    return redirect(url_for('settings'))
+# Settings route
 @app.route('/settings')
 @login_required
 def settings():
