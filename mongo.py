@@ -1,13 +1,12 @@
 from flask import Flask, render_template, request, redirect, url_for, flash, session
 from pymongo import MongoClient
-import bcrypt
 
 app = Flask(__name__)
-app.secret_key = 'your_secret_key'  # Needed for session management and flash messages
+app.secret_key = 'your_secret_key'
 
-# MongoDB connection
-client = MongoClient('mongodb://localhost:27017/logindatabase')
-db = client.your_database_name
+
+client = MongoClient('mongodb://localhost:27017')
+db = client.login
 users_collection = db.users
 
 @app.route('/')
@@ -23,7 +22,7 @@ def login():
         password = request.form['password']
         user = users_collection.find_one({'email': email})
 
-        if user and bcrypt.checkpw(password.encode('utf-8'), user['password']):
+        if user and user['password'] == password:
             session['user'] = user['name']
             return redirect(url_for('index'))
         else:
@@ -43,21 +42,15 @@ def signup():
         if existing_user:
             flash('Email already exists')
         else:
-            hashed_password = bcrypt.hashpw(password.encode('utf-8'), bcrypt.gensalt())
             users_collection.insert_one({
                 'name': name,
                 'email': email,
-                'password': hashed_password
+                'password': password
             })
             session['user'] = name
             return redirect(url_for('index'))
     
     return render_template('signup.html')
-
-@app.route('/logout')
-def logout():
-    session.pop('user', None)
-    return redirect(url_for('login'))
 
 if __name__ == '__main__':
     app.run(debug=True)
