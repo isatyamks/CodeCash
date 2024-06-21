@@ -9,6 +9,8 @@ client = MongoClient('mongodb://localhost:27017')  # corrected the port
 db = client.login
 users_collection = db.users
 
+
+
 def login_required(f):
     @wraps(f)
     def decorated_function(*args, **kwargs):
@@ -17,8 +19,16 @@ def login_required(f):
         return f(*args, **kwargs)
     return decorated_function
 
+
+
 @app.route('/')
 def index():
+    if 'user' in session:
+        return render_template('index.html')
+    return redirect(url_for('login'))
+
+@app.route('/home')
+def home():
     if 'user' in session:
         return render_template('index.html')
     return redirect(url_for('login'))
@@ -87,26 +97,7 @@ def investment():
 def leaderboard():
     return render_template('leaderboard.html')
 
-@app.route('/logout')
-@login_required
-def logout():
-    session.pop('user', None)
-    flash('You have been logged out.')
-    return redirect(url_for('login'))
 
-@app.route('/delete_account')
-@login_required
-def delete_account():
-    if 'user' in session:
-        users_collection.delete_one({'email': session['user']})
-        session.pop('user', None)
-        flash('Your account has been deleted.')
-    return redirect(url_for('index'))
-
-@app.route('/feedback')
-@login_required
-def feedback():
-    return render_template('feedback.html')
 
 if __name__ == '__main__':
     app.run(debug=True)
