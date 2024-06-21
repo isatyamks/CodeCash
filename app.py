@@ -43,36 +43,46 @@ def login():
         user = users_collection.find_one({'email': email})
 
         if user and user['password'] == password:
-            session['user'] = user['name']
+            session['user'] = user['user_name']
             return redirect(url_for('index'))
         else:
             flash('Invalid email or password')
     
     return render_template('login.html')
 
+
 @app.route('/signup', methods=['GET', 'POST'])
 def signup():
     if request.method == 'POST':
-        name = request.form['name']
+        user_name = request.form['user_name']
         email = request.form['email']
         password = request.form['password']
         signup_time = datetime.now()
 
-        existing_user = users_collection.find_one({'email': email})
-        
-        if existing_user:
+        # Check if email already exists
+        existing_email = users_collection.find_one({'email': email})
+        if existing_email:
             flash('Email already exists')
-        else:
-            users_collection.insert_one({
-                'name': name,
-                'email': email,
-                'password': password,
-                'signup_time': signup_time
-            })
-            session['user'] = name
-            return redirect(url_for('index'))
+            return redirect(url_for('signup'))
+
+        # Check if username already exists
+        existing_username = users_collection.find_one({'user_name': user_name})
+        if existing_username:
+            flash('Username already exists')
+            return redirect(url_for('signup'))
+
+        # If email and username are unique, insert new user
+        users_collection.insert_one({
+            'user_name': user_name,
+            'email': email,
+            'password': password,
+            'signup_time': signup_time
+        })
+        session['user'] = user_name
+        return redirect(url_for('index'))
     
     return render_template('signup.html')
+
 
 
 
@@ -93,7 +103,7 @@ def delete_account():
     if request.method == 'POST':
         username = session.get('user')  # Assuming session['user'] contains the username
         if username:
-            user = users_collection.find_one({'name': username})
+            user = users_collection.find_one({'user_name': username})
             if user:
                 email = user['email']  # Get the email from the user document
                 result = users_collection.delete_one({'email': email})
