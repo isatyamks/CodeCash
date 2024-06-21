@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Settings</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+        }
+        .navbar {
+            overflow: hidden;
+            background-color: #333;
+        }
+        .navbar a {
+            float: left;
+            display: block;
+            color: white;
+            text-align: center;
+            padding: 14px 20px;
+            text-decoration: none.
+        }
+        .navbar a:hover {
+            background-color: #ddd;
+            color: black.
+        }
+        .content {
+            padding: 20px.
+        }
+        .settings-options {
+            list-style-type: none;
+            padding: 0.
+        }
+        .settings-options li {
+            margin: 10px 0.
+        }
+        .settings-options a {
+            text-decoration: none;
+            color: #007BFF.
+        }
+        .settings-options a:hover {
+            text-decoration: underline.
+        }
+    </style>
+</head>
+<body>
+
+<div class="navbar">
+    <a href="{{ url_for('index') }}">Home</a>
+    <a href="{{ url_for('bank') }}">Bank</a>
+    <a href="{{ url_for('market') }}">Market</a>
+    <a href="{{ url_for('investment') }}">Investment</a>
+    <a href="{{ url_for('leaderboard') }}">Leaderboard</a>
+    <a href="{{ url_for('settings') }}">Settings</a>
+</div>
+
+<div class="content">
+    <h1>Settings</h1>
+    <ul class="settings-options">
+        <li><a href="{{ url_for('logout') }}">Logout</a></li>
+        <li><a href="{{ url_for('delete_account') }}">Delete Account</a></li>
+        <li><a href="{{ url_for('feedback') }}">Feedback Form</a></li>
+    </ul>
+</div>
+
+</body>
+</html>

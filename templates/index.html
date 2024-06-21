@@ -4,9 +4,23 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Index</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles/index.css') }}">
 </head>
 <body>
+
+<div class="navbar">
+    <a href="home">Home</a>
+    <a href="bank">Bank</a>
+    <a href="market">Market</a>
+    <a href="investment">Investment</a>
+    <a href="leaderboard">Leaderboard</a>
+    <a href="settings">Settings</a>
+</div>
+
+<div class="content">
     <h1>Welcome to the Index Page</h1>
     <p>You have successfully logged in.</p>
+</div>
+
 </body>
 </html>
