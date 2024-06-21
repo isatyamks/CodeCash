@@ -101,11 +101,11 @@ def logout():
 @login_required
 def delete_account():
     if request.method == 'POST':
-        username = session.get('user')  # Assuming session['user'] contains the username
+        username = session.get('user')  
         if username:
             user = users_collection.find_one({'user_name': username})
             if user:
-                email = user['email']  # Get the email from the user document
+                email = user['email']  
                 result = users_collection.delete_one({'email': email})
                 if result.deleted_count > 0:
                     session.pop('user', None)
@@ -117,9 +117,23 @@ def delete_account():
 def settings():
     return render_template('settings.html')
 
-@app.route('/bank')
-@login_required
+@app.route('/bank', methods=['GET', 'POST'])
 def bank():
+    if request.method == 'POST':
+        amount = request.form['amount']
+        action = request.form['action']
+
+        if action == 'deposit':
+            print(f"Successfully deposited Rs {amount}")
+        elif action == 'loan':
+            username = session.get('user')  
+            if username:
+                user = users_collection.find_one({'user_name': username})
+                if user:
+                    email = user['email']  
+                    users_collection.update_one({'email': email}, {'$set': {'loan_amount': amount}})
+            print(f"Loan of Rs {amount} approved.")
+
     return render_template('bank.html')
 
 @app.route('/market')
