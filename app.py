@@ -3,7 +3,7 @@ from flask import Flask, render_template, request, redirect, url_for, flash, ses
 from pymongo import MongoClient
 from datetime import datetime
 
-
+worth = 0
 
 app = Flask(__name__)
 app.secret_key = 'IITbombay4584'
@@ -76,7 +76,8 @@ def signup():
             'user_name': user_name,
             'email': email,
             'password': password,
-            'signup_time': signup_time
+            'signup_time': signup_time,
+            'worth':worth
         })
         session['user'] = user_name
         return redirect(url_for('index'))
@@ -120,12 +121,24 @@ def settings():
 @app.route('/bank', methods=['GET', 'POST'])
 def bank():
     if request.method == 'POST':
-        amount = request.form['amount']
+        amount = int(request.form['amount'])
         action = request.form['action']
 
         if action == 'deposit':
-            print(f"Successfully deposited Rs {amount}")
+            global worth 
+            worth-=amount
+            username = session.get('user')  
+            if username:
+                user = users_collection.find_one({'user_name': username})
+                if user:
+                    email = user['email']  
+                    users_collection.update_one({'email': email}, {'$set': {'worth': worth}})
+            print(f"Loan of Rs {amount} approved.")
+
+            
+          
         elif action == 'loan':
+            
             username = session.get('user')  
             if username:
                 user = users_collection.find_one({'user_name': username})

@@ -23,12 +23,15 @@
         <tr>
             <th>Name</th>
             <th>Email</th>
+            <th>Worth</th>
             <th>Signup Time</th>
         </tr>
         {% for user in users %}
         <tr>
             <td>{{ user.user_name }}</td>
             <td>{{ user.email }}</td>
+            <td>Rs  {{ user.loan_amount }}</td>
+            <td>{{user.worth}}
             <td>{{ user.signup_time }}</td>
         </tr>
         {% endfor %}
