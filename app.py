@@ -160,30 +160,37 @@ def bank():
         action = request.form['action']
 
         if action == 'deposit':
-            global worth 
-            worth-=amount
-            username = session.get('user')  
+            username = session.get('user')
             if username:
                 user = users_collection.find_one({'user_name': username})
                 if user:
-                    email = user['email']  
-                    users_collection.update_one({'email': email}, {'$set': {'worth': worth}})
-            print(f"Loan of Rs {amount} approved.")
-
-            
-          
+                    global worth
+                    worth = user.get('worth', 0)  
+                    if amount <= worth:
+                        worth -= amount
+                        email = user['email']
+                        users_collection.update_one({'email': email}, {'$set': {'worth': worth}})
+                        print(f"Loan of Rs {amount} approved.")
+                    else:
+                        print("Amount exceeds available worth.")
+                else:
+                    print("User not found.")
+            else:
+                print("Username not found in session.")
+                
         elif action == 'loan':
             
-            worth+=amount
+            worth += amount
             username = session.get('user')  
             if username:
                 user = users_collection.find_one({'user_name': username})
                 if user:
                     email = user['email']  
                     users_collection.update_one({'email': email}, {'$set': {'worth': worth}})
-            print(f"Loan of Rs {amount} approved.")
+                    print(f"Loan of Rs {amount} approved.")
 
     return render_template('bank.html')
+
 
 @app.route('/market')
 @login_required
