@@ -22,20 +22,19 @@
     <h1>Welcome to the Index Page</h1>
     <p>You have successfully logged in.</p>
 
+    <div>
+        <h2>User Information</h2>
+        <p>Username: {{ username }}</p>
+        <p>Email: {{ email }}</p>
+        <p>Worth: ${{ worth }}</p>
+    </div>
     
     <form action="{{ url_for('next_month') }}" method="POST">
         <button type="submit">Next Month</button>
     </form>
 </div>
-<div>
-    <h2>Your Purchases</h2>
-    <ul>
-        {% for purchase in user_purchases %}
-            <li>{{ purchase.product_name }} - ${{ purchase.price }}</li>
-        {% endfor %}
-    </ul>
 
-</div>
+
 
 </body>
 </html>

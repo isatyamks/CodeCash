@@ -35,7 +35,7 @@ def index():
     user_purchases = list(purchases_collection.find({'user_name': username}))
     print(month_year)
     print(user_purchases)
-    return render_template('index.html', month_year=month_year, user_purchases=user_purchases)
+    return render_template('index.html', month_year=month_year, user_purchases=user_purchases,username=username,worth=worth)
 
 @app.route('/home')
 @login_required
