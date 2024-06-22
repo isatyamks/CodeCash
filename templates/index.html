@@ -22,10 +22,20 @@
     <h1>Welcome to the Index Page</h1>
     <p>You have successfully logged in.</p>
 
-    <!-- Next Month Button -->
+    
     <form action="{{ url_for('next_month') }}" method="POST">
         <button type="submit">Next Month</button>
     </form>
 </div>
+<div>
+    <h2>Your Purchases</h2>
+    <ul>
+        {% for purchase in user_purchases %}
+            <li>{{ purchase.product_name }} - ${{ purchase.price }}</li>
+        {% endfor %}
+    </ul>
+
+</div>
+
 </body>
 </html>

@@ -2,6 +2,7 @@ from functools import wraps
 from flask import Flask, render_template, request, redirect, url_for, flash, session
 from pymongo import MongoClient
 from datetime import datetime,timedelta
+from logic.logic1 import update_worth, move_to_next_month
 
 worth = 0
 
@@ -30,8 +31,11 @@ def index():
     user = users_collection.find_one({'user_name': username})
     current_date = user.get('current_date', datetime.now())
     month_year = current_date.strftime("%B-%Y")
+    purchases_collection = db.purchases
+    user_purchases = list(purchases_collection.find({'user_name': username}))
     print(month_year)
-    return render_template('index.html', month_year=month_year)
+    print(user_purchases)
+    return render_template('index.html', month_year=month_year, user_purchases=user_purchases)
 
 @app.route('/home')
 @login_required
@@ -51,24 +55,13 @@ def home():
 def next_month():
     income = 850
     expenditure = 400
-    net_gain = income - expenditure
 
     username = session.get('user')
     if username:
-        user = users_collection.find_one({'user_name': username})
-        if user:
-            new_worth = user.get('worth', 0) + net_gain
-            users_collection.update_one({'user_name': username}, {'$set': {'worth': new_worth}})
-            
-            # Update the current date
-            current_date = user.get('current_date', datetime.now())
-            new_date = current_date + timedelta(days=30)  # Assuming a month is 30 days
-            users_collection.update_one({'user_name': username}, {'$set': {'current_date': new_date}})
-            
-            flash('Moved to the next month! Worth and date updated.')
+        move_to_next_month(username, income, expenditure)
+        print('Moved to the next month! Worth and date updated.')
     
     return redirect(url_for('index'))
-
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
@@ -81,7 +74,7 @@ def login():
             session['user'] = user['user_name']
             return redirect(url_for('index'))
         else:
-            flash('Invalid email or password')
+            print('Invalid email or password')
     
     return render_template('login.html')
 
@@ -97,13 +90,13 @@ def signup():
         # Check if email already exists
         existing_email = users_collection.find_one({'email': email})
         if existing_email:
-            flash('Email already exists')
+            print('Email already exists')
             return redirect(url_for('signup'))
 
         # Check if username already exists
         existing_username = users_collection.find_one({'user_name': user_name})
         if existing_username:
-            flash('Username already exists')
+            print('Username already exists')
             return redirect(url_for('signup'))
 
         # If email and username are unique, insert new user
@@ -153,49 +146,70 @@ def delete_account():
 def settings():
     return render_template('settings.html')
 
+
+
+
 @app.route('/bank', methods=['GET', 'POST'])
 def bank():
     if request.method == 'POST':
         amount = int(request.form['amount'])
         action = request.form['action']
 
-        if action == 'deposit':
-            username = session.get('user')
-            if username:
-                user = users_collection.find_one({'user_name': username})
-                if user:
-                    global worth
-                    worth = user.get('worth', 0)  
-                    if amount <= worth:
-                        worth -= amount
-                        email = user['email']
-                        users_collection.update_one({'email': email}, {'$set': {'worth': worth}})
-                        print(f"Loan of Rs {amount} approved.")
-                    else:
-                        print("Amount exceeds available worth.")
-                else:
-                    print("User not found.")
-            else:
-                print("Username not found in session.")
-                
-        elif action == 'loan':
-            
-            worth += amount
-            username = session.get('user')  
-            if username:
-                user = users_collection.find_one({'user_name': username})
-                if user:
-                    email = user['email']  
-                    users_collection.update_one({'email': email}, {'$set': {'worth': worth}})
-                    print(f"Loan of Rs {amount} approved.")
-
+        username = session.get('user')
+        if username:
+            update_worth(username, amount, action)
+            print(f"Updated worth based on {action}.")
+        
     return render_template('bank.html')
+
+
 
 
 @app.route('/market')
 @login_required
 def market():
     return render_template('market.html')
+
+@app.route('/product', methods=['POST'])
+@login_required
+def buy_product():
+    username = session.get('user')
+    if not username:
+        print('User not logged in.')
+        return redirect(url_for('login'))
+
+    user = users_collection.find_one({'user_name': username})
+    if not user:
+        print('User not found.')
+        return redirect(url_for('index'))
+
+    try:
+        product_name = request.form['product_name']
+        price = int(request.form['price'])
+
+        current_worth = user.get('worth', 0)
+        if current_worth < price:
+            print('Insufficient funds to purchase this item.')
+            return redirect(url_for('index'))
+
+        new_worth = current_worth - price
+        users_collection.update_one({'user_name': username}, {'$set': {'worth': new_worth}})
+
+        purchases_collection = db.purchases
+        purchases_collection.insert_one({
+            'user_name': username,
+            'product_name': product_name,
+            'price': price,
+            'purchase_date': datetime.now()
+        })
+
+        print(f'You purchased {product_name} for ${price}.')
+    except Exception as e:
+        print(f'Error processing purchase: {str(e)}')
+
+    return redirect(url_for('index'))
+
+
 
 @app.route('/investment')
 @login_required
