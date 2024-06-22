@@ -1,13 +1,13 @@
 from functools import wraps
 from flask import Flask, render_template, request, redirect, url_for, flash, session
 from pymongo import MongoClient
-from datetime import datetime
+from datetime import datetime,timedelta
 
 worth = 0
 
 app = Flask(__name__)
-app.secret_key = 'IITbombay4584'
-client = MongoClient('mongodb://localhost:27017')  # corrected the port
+app.secret_key = 'Ifsfss584'
+client = MongoClient('mongodb://localhost:27017')  
 db = client.login
 users_collection = db.users
 
@@ -24,16 +24,26 @@ def login_required(f):
 
 
 @app.route('/')
+@login_required
 def index():
-    if 'user' in session:
-        return render_template('index.html')
-    return redirect(url_for('login'))
+    username = session.get('user')
+    user = users_collection.find_one({'user_name': username})
+    current_date = user.get('current_date', datetime.now())
+    month_year = current_date.strftime("%B-%Y")
+    print(month_year)
+    return render_template('index.html', month_year=month_year)
 
 @app.route('/home')
+@login_required
 def home():
-    if 'user' in session:
-        return render_template('index.html')
-    return redirect(url_for('login'))
+    username = session.get('user')
+    user = users_collection.find_one({'user_name': username})
+    current_date = user.get('current_date', datetime.now())
+    month_year = current_date.strftime("%B-%Y")
+    print(month_year)
+    return render_template('index.html', month_year=month_year)
+
+
 
 
 @app.route('/next_month', methods=['POST'])
@@ -49,9 +59,16 @@ def next_month():
         if user:
             new_worth = user.get('worth', 0) + net_gain
             users_collection.update_one({'user_name': username}, {'$set': {'worth': new_worth}})
-            print('Moved to the next month! Worth updated.')
+            
+            # Update the current date
+            current_date = user.get('current_date', datetime.now())
+            new_date = current_date + timedelta(days=30)  # Assuming a month is 30 days
+            users_collection.update_one({'user_name': username}, {'$set': {'current_date': new_date}})
+            
+            flash('Moved to the next month! Worth and date updated.')
     
     return redirect(url_for('index'))
+
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
