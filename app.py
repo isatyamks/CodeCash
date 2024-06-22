@@ -35,6 +35,24 @@ def home():
         return render_template('index.html')
     return redirect(url_for('login'))
 
+
+@app.route('/next_month', methods=['POST'])
+@login_required
+def next_month():
+    income = 850
+    expenditure = 400
+    net_gain = income - expenditure
+
+    username = session.get('user')
+    if username:
+        user = users_collection.find_one({'user_name': username})
+        if user:
+            new_worth = user.get('worth', 0) + net_gain
+            users_collection.update_one({'user_name': username}, {'$set': {'worth': new_worth}})
+            print('Moved to the next month! Worth updated.')
+    
+    return redirect(url_for('index'))
+
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     if request.method == 'POST':
@@ -139,12 +157,13 @@ def bank():
           
         elif action == 'loan':
             
+            worth+=amount
             username = session.get('user')  
             if username:
                 user = users_collection.find_one({'user_name': username})
                 if user:
                     email = user['email']  
-                    users_collection.update_one({'email': email}, {'$set': {'loan_amount': amount}})
+                    users_collection.update_one({'email': email}, {'$set': {'worth': worth}})
             print(f"Loan of Rs {amount} approved.")
 
     return render_template('bank.html')
