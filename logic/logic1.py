@@ -7,30 +7,36 @@ users_collection = db.users
 
 def update_worth(username, amount, action):
     user = users_collection.find_one({'user_name': username})
-    if user:
-        current_worth = user.get('worth', 0)
-        if action == 'deposit':
-            if current_worth>=amount:
-                new_worth = current_worth - amount
-            else:
-                new_worth=current_worth  # Adjust for deposit
-        elif action == 'loan':
-            new_worth = current_worth + amount  # Adjust for loan
-        else:
-            new_worth = current_worth  # Default action (like next month)
+    if not user:
+        return
 
-        users_collection.update_one({'user_name': username}, {'$set': {'worth': new_worth}})
+    current_worth = user.get('worth', 0)
+    if action == 'loan':
+        new_worth = current_worth + amount
+    elif action == 'deposit' and current_worth >= amount:
+        new_worth = current_worth - amount
+    else:
+        return  # Invalid action or insufficient funds
+
+    users_collection.update_one({'user_name': username}, {'$set': {'worth': new_worth}})
+    print(f"Updated worth based on {action}. New worth: {new_worth}")
 
 def move_to_next_month(username, income, expenditure):
     user = users_collection.find_one({'user_name': username})
-    if user:
-        current_worth = user.get('worth', 0)
-        net_gain = income - expenditure
-        new_worth = current_worth + net_gain
+    if not user:
+        return
 
-        users_collection.update_one({'user_name': username}, {'$set': {'worth': new_worth}})
+    current_worth = user.get('worth', 0)
+    new_worth = current_worth + income - expenditure
 
-        # Update current date to next month
-        current_date = user.get('current_date', datetime.now())
-        new_date = current_date + timedelta(days=30)  # Assuming a month is 30 days
-        users_collection.update_one({'user_name': username}, {'$set': {'current_date': new_date}})
+    # Update the worth and current date
+    users_collection.update_one(
+        {'user_name': username},
+        {
+            '$set': {
+                'worth': new_worth,
+                'current_date': datetime.now() + timedelta(days=30)  # Move to next month
+            }
+        }
+    )
+    print(f'Moved to the next month! New worth: {new_worth}')

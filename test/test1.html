@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Index</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles/index.css') }}">
+</head>
+<body>
+
+<div class="navbar">
+    <span>{{ month_year }}</span>
+</div>
+
+<div class="container">
+    <div class="box" onclick="location.href='{{ url_for('home') }}'">
+        <span>Home</span>
+    </div>
+    <div class="box" onclick="location.href='{{ url_for('bank') }}'">
+        <span>Bank</span>
+    </div>
+    <div class="box" onclick="location.href='{{ url_for('market') }}'">
+        <span>Market</span>
+    </div>
+    <div class="box" onclick="location.href='{{ url_for('investment') }}'">
+        <span>Investment</span>
+    </div>
+    <div class="box" onclick="location.href='{{ url_for('leaderboard') }}'">
+        <span>Leaderboard</span>
+    </div>
+    <div class="box" onclick="location.href='{{ url_for('settings') }}'">
+        <span>Settings</span>
+    </div>
+    <div class="box">
+        <form action="{{ url_for('next_month') }}" method="POST">
+            <button type="submit">Next Month</button>
+        </form>
+    </div>
+</div>
+
+<div class="content">
+    <h1>Welcome to the Index Page</h1>
+    <p>You have successfully logged in.</p>
+
+    <div>
+        <h2>User Information</h2>
+        <p>Username: {{ username }}</p>
+        <p>Email: {{ email }}</p>
+        <p>Worth: ${{ worth }}</p>
+    </div>
+</div>
+
+</body>
+</html>

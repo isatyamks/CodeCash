@@ -9,12 +9,10 @@
 <body>
 
 <div class="navbar">
-    <a href="/">Home</a>
-    <a href="/bank">Bank</a>
-    <a href="/market">Market</a>
-    <a href="/investment">Investment</a>
-    <a href="/leaderboard">Leaderboard</a>
-    <a href="/settings">Settings</a>
+    <a href="home">Home</a>
+    <span>{{ username }}</span>
+    <span>Worth: Rs {{ worth }}</span>
+    <span>{{ month_year }}</span>
 </div>
 
 <form method="post" action="/bank">

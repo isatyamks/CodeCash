@@ -5,24 +5,35 @@ body {
     color: white;
 }
 
-.navbar {
+nav {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 10px 20px;
+    padding: 10px;
     background-color: #333;
 }
 
-.navbar a {
-    color: white;
-    text-decoration: none;
-    margin-right: 10px;
+.nav-left, .nav-center, .nav-right {
+    display: flex;
+    align-items: center;
 }
 
-.navbar span {
-    font-size: 18px;
+.nav-center {
+    flex-grow: 1;
+    justify-content: center;
+}
+
+.nav-left button, .nav-right button {
+    margin: 0 5px;
+    padding: 5px 10px;
+    border: none;
+    background-color: #555;
     color: white;
-    margin-right: 10px;
+    cursor: pointer;
+}
+
+.nav-right button#settings {
+    font-size: 20px;
 }
 
 .container {
@@ -31,8 +42,6 @@ body {
     gap: 20px;
     padding: 20px;
     justify-items: center;
-    margin: 20px auto;
-    width: 80%;
 }
 
 .box {
@@ -45,39 +54,25 @@ body {
     border-radius: 10px;
     cursor: pointer;
     transition: transform 0.3s;
-    text-align: center;
 }
 
 .box:hover {
     transform: scale(1.1);
 }
 
-.box form {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100%;
-    width: 100%;
-    margin: 0;
+.box img, .box button {
+    max-width: 80%;
+    max-height: 80%;
 }
 
-.box button {
+.box#pass {
+    background-color: #f39c12;
+}
+
+.box#pass button {
     background-color: transparent;
     border: none;
     color: white;
     font-size: 16px;
     cursor: pointer;
-}
-
-.pass-button {
-    grid-column: 2 / span 1;
-}
-
-.content {
-    padding: 20px;
-    text-align: center;
-}
-
-h1, h2 {
-    margin-top: 0;
 }

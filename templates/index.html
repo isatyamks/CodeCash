@@ -10,31 +10,36 @@
 
 <div class="navbar">
     <a href="home">Home</a>
-    <a href="bank">Bank</a>
-    <a href="market">Market</a>
-    <a href="investment">Investment</a>
-    <a href="leaderboard">Leaderboard</a>
-    <a href="settings">Settings</a>
+    <span>{{ username }}</span>
+    <span>Rs {{ worth }}</span>
     <span>{{ month_year }}</span>
 </div>
 
-<div class="content">
-    <h1>Welcome to the Index Page</h1>
-    <p>You have successfully logged in.</p>
-
-    <div>
-        <h2>User Information</h2>
-        <p>Username: {{ username }}</p>
-        <p>Email: {{ email }}</p>
-        <p>Worth: ${{ worth }}</p>
+<div class="container">
+    <div class="box" onclick="location.href='bank'">
+        <span>Bank</span>
     </div>
-    
-    <form action="{{ url_for('next_month') }}" method="POST">
-        <button type="submit">Next Month</button>
-    </form>
+    <div class="box" onclick="location.href='market'">
+        <span>Market</span>
+    </div>
+    <div class="box" onclick="location.href='Statement'">
+        <span>Investment</span>
+    </div>
+    <div class="box" onclick="location.href='leaderboard'">
+        <span>Leaderboard</span>
+    </div>
+    <div class="box" onclick="location.href='setting'">
+        <span>Settings</span>
+    </div>
+    <div class="box" onclick="location.href='wallet'">
+        <span>Wallet</span>
+    </div>
+    <div class="box pass-button">
+        <form action="{{ url_for('next_month') }}" method="POST">
+            <button type="submit">Next Month</button>
+        </form>
+    </div>
 </div>
-
-
 
 </body>
 </html>
