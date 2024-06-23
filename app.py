@@ -4,7 +4,7 @@ from pymongo import MongoClient
 from datetime import datetime,timedelta
 from logic.logic1 import update_worth, move_to_next_month
 
-worth = 0
+worth=0
 
 app = Flask(__name__)
 app.secret_key = 'Ifsfss584'
@@ -33,9 +33,10 @@ def index():
     month_year = current_date.strftime("%B-%Y")
     purchases_collection = db.purchases
     user_purchases = list(purchases_collection.find({'user_name': username}))
+    worth = user.get('worth', 0)  # Fetch the current worth from the database
     print(month_year)
     print(user_purchases)
-    return render_template('index.html', month_year=month_year, user_purchases=user_purchases,username=username,worth=worth)
+    return render_template('index.html', month_year=month_year, user_purchases=user_purchases, username=username, worth=worth)
 
 @app.route('/home')
 @login_required
@@ -44,8 +45,9 @@ def home():
     user = users_collection.find_one({'user_name': username})
     current_date = user.get('current_date', datetime.now())
     month_year = current_date.strftime("%B-%Y")
+    worth = user.get('worth', 0)  # Fetch the current worth from the database
     print(month_year)
-    return render_template('index.html', month_year=month_year)
+    return render_template('index.html', month_year=month_year, username=username, worth=worth)
 
 
 
