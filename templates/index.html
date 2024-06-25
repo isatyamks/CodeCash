@@ -5,41 +5,38 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Index</title>
     <link rel="stylesheet" href="../static/styles/index.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
 </head>
 <body>
 
 <div class="navbar">
-    <a href="home">Home</a>
-    <span>{{ username }}</span>
-    <span>Rs {{ worth }}</span>
-    <span>{{ month_year }}</span>
+    <div class="navbar-content">
+        <span class="navbar-item">Username: {{ username }}</span>
+        <span class="navbar-item">Worth: Rs {{ worth }}</span>
+        <span class="navbar-item">Bank Data: Rs {{ bank }}</span>
+        <span class="navbar-item">{{ month_year }}</span>
+    </div>
+</div>
+
+<div class="sidebar">
+    <a href="home" class="active"><i class="fas fa-home"></i> Home</a>
+    <a href="bank"><i class="fas fa-university"></i> Bank</a>
+    <a href="market"><i class="fas fa-store"></i> Market</a>
+    <a href="Statement"><i class="fas fa-chart-line"></i> Investment</a>
+    <a href="leaderboard"><i class="fas fa-trophy"></i> Leaderboard</a>
+    <a href="setting"><i class="fas fa-cog"></i> Settings</a>
+    <a href="wallet"><i class="fas fa-wallet"></i> Wallet</a>
 </div>
 
 <div class="container">
-    <div class="box" onclick="location.href='bank'">
-        <span>Bank</span>
-    </div>
-    <div class="box" onclick="location.href='market'">
-        <span>Market</span>
-    </div>
-    <div class="box" onclick="location.href='Statement'">
-        <span>Investment</span>
-    </div>
-    <div class="box" onclick="location.href='leaderboard'">
-        <span>Leaderboard</span>
-    </div>
-    <div class="box" onclick="location.href='setting'">
-        <span>Settings</span>
-    </div>
-    <div class="box" onclick="location.href='wallet'">
-        <span>Wallet</span>
-    </div>
-    <div class="box pass-button">
-        <form action="{{ url_for('next_month') }}" method="POST">
-            <button type="submit">Next Month</button>
-        </form>
+    <div class="main-content">
+        <!-- Main content goes here -->
+        <div class="pass-button">
+            <form action="{{ url_for('next_month') }}" method="POST">
+                <button type="submit">Next Month</button>
+            </form>
+        </div>
     </div>
 </div>
-
 </body>
 </html>

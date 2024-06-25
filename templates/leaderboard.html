@@ -5,17 +5,28 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Leaderboard</title>
     <link rel="stylesheet" href="../static/styles/leaderboard.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
 </head>
 <body>
 
+
 <div class="navbar">
-    <a href="home">Home</a>
-    <span>{{ username }}</span>
-    <span>Worth: Rs {{ worth }}</span>
-    <span>{{ month_year }}</span>
+    <div class="navbar-content">
+        <span class="navbar-item">Username: {{ username }}</span>
+        <span class="navbar-item">Worth: Rs {{ worth }}</span>
+        <span class="navbar-item">{{ month_year }}</span>
+    </div>
 </div>
 
-
+<div class="sidebar">
+    <a href="home" class="active"><i class="fas fa-home"></i> Home</a>
+    <a href="bank"><i class="fas fa-university"></i> Bank</a>
+    <a href="market"><i class="fas fa-store"></i> Market</a>
+    <a href="Statement"><i class="fas fa-chart-line"></i> Investment</a>
+    <a href="leaderboard"><i class="fas fa-trophy"></i> Leaderboard</a>
+    <a href="setting"><i class="fas fa-cog"></i> Settings</a>
+    <a href="wallet"><i class="fas fa-wallet"></i> Wallet</a>
+</div>
 <div class="content">
     <h1>Leaderboard</h1>
     <table>
@@ -23,14 +34,28 @@
             <th>UserName</th>
             <th>Email</th>
             <th>Worth</th>
-            <th>Joining Time</th>
+            <th>SIP</th>
+            <th>Lumpsum</th>
+            <th>Loan</th>
+            <th>RD</th>
+            <th>FD</th>
+            <th>Bank</th>
+            <th>Join Time</th>
+            <th>Now Time</th>
         </tr>
         {% for user in users %}
         <tr>
             <td>{{ user.user_name }}</td>
             <td>{{ user.email }}</td>
-            <td>{{user.worth}}
+            <td>{{ user.worth }}</td>
+            <td>{{ user.sip }}</td>
+            <td>{{ user.lumpsum }}</td>
+            <td>{{ user.loan }}</td>
+            <td>{{ user.rd }}</td>
+            <td>{{ user.fd }}</td>
+            <td>{{ bank }}</td>
             <td>{{ user.signup_time }}</td>
+            <td>{{ user.current_time }}</td>
         </tr>
         {% endfor %}
     </table>

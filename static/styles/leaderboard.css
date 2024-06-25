@@ -2,43 +2,89 @@ body {
     font-family: Arial, sans-serif;
     margin: 0;
     padding: 0;
+    background-color: #f4f4f9;
 }
 
 .navbar {
-    overflow: hidden;
-    background-color: #333;
+    background-color: #007bff;
+    color: white;
+    padding: 10px 20px;
 }
 
-.navbar a {
-    float: left;
+.navbar-content {
+    display: flex;
+    justify-content: space-between;
+}
+
+.navbar-item {
+    margin: 0 10px;
+}
+
+.sidebar {
+    width: 200px;
+    background-color: #343a40;
+    color: white;
+    position: fixed;
+    height: 100%;
+    padding-top: 20px;
+}
+
+.sidebar a {
     display: block;
     color: white;
-    text-align: center;
-    padding: 14px 20px;
+    padding: 15px;
     text-decoration: none;
 }
 
-.navbar a:hover {
-    background-color: #ddd;
-    color: black;
+.sidebar a:hover,
+.sidebar a.active {
+    background-color: #007bff;
 }
-
-
 .content {
+    margin-left: 220px; /* Adjusted for sidebar width */
     padding: 20px;
 }
+
+.content h1 {
+    font-size: 24px; /* Reduced font size for better fit */
+    margin-bottom: 20px;
+}
+
 table {
     width: 100%;
     border-collapse: collapse;
-    margin: 20px 0;
 }
+
 table, th, td {
     border: 1px solid #ddd;
 }
+
 th, td {
-    padding: 12px;
+    padding: 10px;
     text-align: left;
 }
+
 th {
-    background-color: #f2f2f2;
+    background-color: #4CAF50;
+    color: white;
+}
+
+/* Responsive adjustments */
+@media screen and (max-width: 800px) {
+    .sidebar {
+        width: 100px;
+        padding-top: 15px; /* Adjusted padding for compactness */
+    }
+    
+    .content {
+        margin-left: 100px;
+    }
+    
+    .navbar {
+        padding: 15px; /* Adjusted padding for compactness */
+    }
+    
+    .navbar-item {
+        font-size: 16px; /* Further reduced font size for smaller screens */
+    }
 }

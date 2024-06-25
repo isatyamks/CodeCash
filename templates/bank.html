@@ -5,23 +5,115 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Bank</title>
     <link rel="stylesheet" href="../static/styles/bank.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
 </head>
 <body>
 
 <div class="navbar">
-    <a href="home">Home</a>
-    <span>{{ username }}</span>
-    <span>Worth: Rs {{ worth }}</span>
-    <span>{{ month_year }}</span>
+    <div class="navbar-content">
+        <span class="navbar-item">Username: {{ username }}</span>
+        <span class="navbar-item">Worth: Rs {{ worth }}</span>
+        <span class="navbar-item">{{ month_year }}</span>
+    </div>
 </div>
 
-<form method="post" action="/bank">
-    <label for="amount">Enter Amount:</label>
-    <input type="number" id="amount" name="amount" placeholder="Enter amount..." required>
-    <button type="submit" name="action" value="deposit">Deposit Money</button>
-    <button type="submit" name="action" value="loan">Take Loan</button>
-</form>
+<div class="sidebar">
+    <a href="home" class="active"><i class="fas fa-home"></i> Home</a>
+    <a href="bank"><i class="fas fa-university"></i> Bank</a>
+    <a href="market"><i class="fas fa-store"></i> Market</a>
+    <a href="Statement"><i class="fas fa-chart-line"></i> Investment</a>
+    <a href="leaderboard"><i class="fas fa-trophy"></i> Leaderboard</a>
+    <a href="setting"><i class="fas fa-cog"></i> Settings</a>
+    <a href="wallet"><i class="fas fa-wallet"></i> Wallet</a>
+</div>
 
+<div class="container">
+    <div class="amountview">FD Amount: Rs {{ fd }}</div>
+    <div class="box" onclick="openModal('fd')">
+        <span>Fixed Deposit (FD)</span>
+    </div>
+    <button onclick="withdraw('fd')">Withdraw FD</button>
+
+    <div class="amount-view">RD Amount: Rs {{ rd_view }}</div>
+    <div class="box" onclick="openModal('rd')">
+        <span>Recurring Deposit (RD)</span>
+    </div>
+    <button onclick="withdraw('rd')">Withdraw RD</button>
+
+    <div class="amount-view">SIP Amount: Rs {{ sip_view }}</div>
+    <div class="box" onclick="openModal('sip')">
+        <span>Mutual Fund SIP</span>
+    </div>
+    <button onclick="withdraw('sip')">Withdraw SIP</button>
+
+    <div class="amount-view">Lumpsum Amount: Rs {{ lumpsum_view }}</div>
+    <div class="box" onclick="openModal('lumpsum')">
+        <span>Mutual Fund Lumpsum</span>
+    </div>
+    <button onclick="withdraw('lumpsum')">Withdraw Lumpsum</button>
+
+    <div class="amount-view">Loan Amount: Rs {{ loan }}</div>
+    <div class="box" onclick="openModal('loan')">
+        <span>Loan</span>
+    </div>
+    <button onclick="withdraw('loan')">Repay Loan</button>
+</div>
+
+<div id="modal" class="modal">
+    <div class="modal-content">
+        <span class="close" onclick="closeModal()">&times;</span>
+        <form id="modal-form">
+            <input type="hidden" id="action-type" name="action-type">
+            <label for="amount">Amount:</label>
+            <input type="number" id="amount" name="amount" required>
+            <div id="time-period-field" style="display: none;">
+                <label for="time-period">Time Period (months):</label>
+                <input type="number" id="time-period" name="time-period">
+            </div>
+            <button type="submit">Deposit</button>
+        </form>
+    </div>
+</div>
+<script>
+    function openModal(type) {
+        document.getElementById('modal').style.display = 'block';
+        if (type === 'rd' || type === 'loan') {
+            document.getElementById('time-period-field').style.display = 'block';
+        } else {
+            document.getElementById('time-period-field').style.display = 'none';
+        }
+        document.getElementById('action-type').value = type;
+    }
+
+    function closeModal() {
+        document.getElementById('modal').style.display = 'none';
+    }
+
+    function withdraw(type) {
+        alert(`Withdraw ${type}`);
+    }
+
+    window.onclick = function(event) {
+        if (event.target == document.getElementById('modal')) {
+            closeModal();
+        }
+    }
+
+    document.getElementById('modal-form').addEventListener('submit', function(event) {
+        event.preventDefault();
+        var formData = new FormData(this);
+        fetch('/bank', {
+            method: 'POST',
+            body: formData
+        })
+        .then(response => response.text())
+        .then(data => {
+            closeModal();
+            showNotification();
+        })
+        .catch(error => console.error('Error:', error));
+    })
+</script>
 
 </body>
 </html>
