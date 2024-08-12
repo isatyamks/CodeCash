@@ -9,8 +9,18 @@ worth =0
 app = Flask(__name__)
 app.secret_key = 'Ifsfss584'
 client = MongoClient('mongodb://localhost:27017')  
+
+
+#client database
+
 db = client.login
 users_collection = db.users
+
+#bank data mongodb datasets
+db_codecash = client.bank
+bank_collection = db_codecash['assets']
+
+
 
 
 def login_required(f):
@@ -21,6 +31,7 @@ def login_required(f):
         return f(*args, **kwargs)
     return decorated_function
 #---------------------------------------------------------------------------------------
+
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     if request.method == 'POST':
@@ -75,15 +86,22 @@ def signup():
 @app.route('/')
 @login_required
 def index():
+
     
     username = session.get('user')
     user = users_collection.find_one({'user_name': username})
     current_date = user.get('current_date', datetime.now())
     month_year = current_date.strftime("%B-%Y")
+    
     worth = user.get('worth', 0)  
+
+    asset_document = bank_collection.find_one({'_id': 'bank_assets'})
+    bank_money = asset_document.get('total_assets') 
+    
+
     print(current_date)
     print( month_year)
-    return render_template('index.html', month_year=month_year,username=username, worth=worth,bank=logic.bank_assets)
+    return render_template('index.html', month_year=month_year,username=username, worth=worth,bank=bank_money)
 
 
 @app.route('/home')
@@ -95,7 +113,9 @@ def home():
     month_year = current_date.strftime("%B-%Y")
     worth = user.get('worth', 0)  
     print(month_year)
-    return render_template('index.html', month_year=month_year,username=username, worth=worth,bank=logic.bank_assets)
+    asset_document = bank_collection.find_one({'_id': 'bank_assets'})
+    bank_money = asset_document.get('total_assets') 
+    return render_template('index.html', month_year=month_year,username=username, worth=worth,bank=bank_money)
 
 
 @app.route('/next_month', methods=['POST'])
@@ -137,7 +157,7 @@ def bank():
     fd = user.get('fd',0)
     loan =user.get('loan',0)
 
-    return render_template('bank.html', month_year=month_year, username=username, worth=worth,fd=fd,loan=loan)
+    return render_template('bank.html', month_year=month_year, username=username, worth=worth,fd=fd,loan=loan,bank=logic.bank_assets)
 
 
 @app.route('/leaderboard')
@@ -149,10 +169,38 @@ def leaderboard():
     current_date = user.get('current_date', datetime.now())
     month_year = current_date.strftime("%B-%Y")
     worth = user.get('worth', 0)  
-    return render_template('leaderboard.html', users=users,user=user,month_year=month_year,worth=worth,bank=logic.bank_assets)
-
+    return render_template('leaderboard.html', users=users,user=user,username=username,month_year=month_year,worth=worth,bank=logic.bank_assets)
 
 
     
+if __name__ == '__main__':
+    app.run(debug=True)
+
+
+
+
+
+
+
+from flask import Flask, jsonify
+from pymongo import MongoClient
+
+app = Flask(__name__)
+app.secret_key = 'Ifsfss584'
+
+# Initialize MongoDB client
+client = MongoClient('mongodb://localhost:27017')
+
+# Access the 'bank' collection within the 'codecash' database
+
+@app.route('/get_total_assets', methods=['GET'])
+def get_total_assets():
+    # Fetch the document with the _id 'bank_assets'
+    # Print the total_assets value to the console
+    print(f"Total Assets: {total_assets}")
+    
+    # Return the total_assets as a JSON response
+    return jsonify({'total_assets': total_assets})
+
 if __name__ == '__main__':
     app.run(debug=True)
