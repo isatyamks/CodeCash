@@ -156,8 +156,9 @@ def bank():
     worth = user.get('worth', 0)
     fd = user.get('fd',0)
     loan =user.get('loan',0)
-
-    return render_template('bank.html', month_year=month_year, username=username, worth=worth,fd=fd,loan=loan,bank=logic.bank_assets)
+    asset_document = bank_collection.find_one({'_id': 'bank_assets'})
+    bank_money = asset_document.get('total_assets') 
+    return render_template('bank.html', month_year=month_year, username=username, worth=worth,fd=fd,loan=loan,bank=bank_money)
 
 
 @app.route('/leaderboard')
@@ -169,7 +170,9 @@ def leaderboard():
     current_date = user.get('current_date', datetime.now())
     month_year = current_date.strftime("%B-%Y")
     worth = user.get('worth', 0)  
-    return render_template('leaderboard.html', users=users,user=user,username=username,month_year=month_year,worth=worth,bank=logic.bank_assets)
+    asset_document = bank_collection.find_one({'_id': 'bank_assets'})
+    bank_money = asset_document.get('total_assets') 
+    return render_template('leaderboard.html', users=users,user=user,username=username,month_year=month_year,worth=worth,bank=bank_money)
 
 
     
