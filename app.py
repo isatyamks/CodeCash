@@ -127,6 +127,16 @@ def next_month():
     return redirect(url_for('index'))
 
 
+@app.route('/stock',methods = ['GET','POST'])
+@login_required
+def stock():
+    username = session.get('user')
+    
+    if request.method == 'POST':
+        user = users_collection.find_one({'username': username})
+        if user:
+            amount = request
+
 @app.route('/bank', methods=['GET', 'POST'])
 @login_required
 def bank():
