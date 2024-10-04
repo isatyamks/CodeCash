@@ -19,8 +19,8 @@ def update_worth(username, amount, action):
         return "User not found"
 
     current_worth = user.get('worth', 0)
-    # bank_assets_record = bank_collection.find_one({'_id': 'bank_assets'})
-    # bank_assets = int(bank_assets_record.get('total_assets', 0))
+    bank_assets_record = bank_collection.find_one({'_id': 'bank_assets'})
+    bank_assets = int(bank_assets_record.get('total_assets', 0))
     
     if action == 'deposit':
         new_worth = current_worth + amount
@@ -42,44 +42,34 @@ def update_worth(username, amount, action):
 
 
 def next_month(username):
-    
-
-    #predifine datasets
     income = 600
     expenditure = 500
-
-
-    #fetching the data from the mongodb
     user = users_collection.find_one({'user_name': username})
     bank_assets_record = bank_collection.find_one({'_id': 'bank_assets'})
     bank_assets=bank_assets_record.get('total_assets',0)
     if not user:
-        return 0
+        return
     
-    #fetching all the data from the mongodb database
     current_worth = user.get('worth', 0)
     fd_amount = user.get('fd', 0)
     loan_amount = user.get('loan', 0)
     loan_time = user.get('loan_time', 0)
     loan_time = int(loan_time)
-
-
     new_bank_assets=bank_assets
-    new_worth = current_worth+income-expenditure 
+    new_worth = current_worth  
     new_loan_amount = loan_amount  
-
-    temp = int(loan_amount+loan_amount*0.1)
-    monthly_loan_amount=temp/loan_time
-
-    #new_worth = current_worth + income - expenditure
-   
+    new_worth = current_worth + income - expenditure
     if loan_amount > 0:
         if loan_time > 0:
+            
+            
+            
             loan_time -= 1
         else:
-            new_worth -= monthly_loan_amount 
-            new_bank_assets = bank_assets + monthly_loan_amount
             
+            new_worth -= loan_amount * 0.1
+            new_bank_assets +=bank_assets*0.1
+            new_loan_amount = loan_amount - loan_amount * 0.1
     
     new_worth += fd_amount * 0.05
     new_bank_assets -= fd_amount *0.05
@@ -202,19 +192,7 @@ def loan(username, amount,time_period):
     bank_assets_record = bank_collection.find_one({'_id': 'bank_assets'})
     bank_assets=bank_assets_record.get('total_assets',0)
     new_bank_assets=bank_assets-loan_amount
-    
     new_worth = current_worth + loan_amount
-
-    
-
-
-    loan_amount = update('total_assets',0)
-    bank_assets_record = bank_collection.find_one({'_id':'bank_assets'})
-
-
-
-
-
     users_collection.update_one(
         {'user_name': username},
         {
@@ -222,9 +200,7 @@ def loan(username, amount,time_period):
                 'worth': new_worth,
                 'loan': new_loan_amount,
                 'loan_time':time_period
-                
             }
         }
     )
     bank_collection.update_one({'_id': 'bank_assets'}, {'$set': {'total_assets': new_bank_assets}})
-
