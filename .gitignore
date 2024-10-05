@@ -1,0 +1,14 @@
+# Python-specific
+*.pyc
+__pycache__/
+.pytest_cache/
+
+# IDE-specific
+*.vscode
+*.idea
+*.sublime-project
+
+# Temporary files and folders
+*.swp
+*~
+.DS_Store
