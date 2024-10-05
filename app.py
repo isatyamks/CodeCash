@@ -141,4 +141,4 @@ def leaderboard():
     return render_template('leaderboard.html', users=users, user=user, username=session.get('user'), month_year=month_year, worth=worth, bank=bank_money)
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run(debug=True) 
