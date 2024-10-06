@@ -16,26 +16,8 @@
 - Frameworks: [List any frameworks used, e.g., Flask, React, etc.]
 - Database: [Mention the database if applicable, e.g., MongoDB, SQLite, etc.]
 
-## Environment Setup 🌍
+## Installation
 
-1. 📥 Clone the repo using git:
-
-```shell
-git clone https://github.com/isatyamks/CodeCash.git
-```
-
-2. 🐍 Install [conda](https://www.anaconda.com/download) for virtual environment management. Create and activate a new virtual environment.
-
-```shell
-conda create -n CodeCash python=3.10.0
-conda activate CodeCash
-```
-
-3. 🛠️ Install the dependencies using pip
-
-To set up your environment to run the code, first install all requirements:
-
-```shell
-pip install -r requirements.txt
-```
-
+1. Clone the repository:
+   ```bash
+   git clone https://github.com/isatyamks/codecash.git
