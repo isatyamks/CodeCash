@@ -45,7 +45,7 @@ def login():
         else:
             print('Invalid email or password')
     
-    return render_template('../templates/login.html')
+    return render_template('login.html')
 
 
 @app.route('/signup', methods=['GET', 'POST'])
@@ -79,7 +79,7 @@ def signup():
         session['user'] = user_name
         return redirect(url_for('index'))
     
-    return render_template('../templates/signup.html')
+    return render_template('signup.html')
 #---------------------------------------------------------------------------------------
 
 
@@ -101,7 +101,7 @@ def index():
 
     print(current_date)
     print( month_year)
-    return render_template('../templates/index.html', month_year=month_year,username=username, worth=worth,bank=bank_money)
+    return render_template('index.html', month_year=month_year,username=username, worth=worth,bank=bank_money)
 
 
 @app.route('/home')
@@ -115,7 +115,7 @@ def home():
     print(month_year)
     asset_document = bank_collection.find_one({'_id': 'bank_assets'})
     bank_money = asset_document.get('total_assets') 
-    return render_template('../templates/index.html', month_year=month_year,username=username, worth=worth,bank=bank_money)
+    return render_template('index.html', month_year=month_year,username=username, worth=worth,bank=bank_money)
 
 
 @app.route('/next_month', methods=['POST'])
@@ -168,7 +168,7 @@ def bank():
     loan =user.get('loan',0)
     asset_document = bank_collection.find_one({'_id': 'bank_assets'})
     bank_money = asset_document.get('total_assets') 
-    return render_template('../templates/bank.html', month_year=month_year, username=username, worth=worth,fd=fd,loan=loan,bank=bank_money)
+    return render_template('bank.html', month_year=month_year, username=username, worth=worth,fd=fd,loan=loan,bank=bank_money)
 
 
 @app.route('/leaderboard')
@@ -182,7 +182,7 @@ def leaderboard():
     worth = user.get('worth', 0)  
     asset_document = bank_collection.find_one({'_id': 'bank_assets'})
     bank_money = asset_document.get('total_assets') 
-    return render_template('../templates/leaderboard.html', users=users,user=user,username=username,month_year=month_year,worth=worth,bank=bank_money)
+    return render_template('leaderboard.html', users=users,user=user,username=username,month_year=month_year,worth=worth,bank=bank_money)
 
 
     
