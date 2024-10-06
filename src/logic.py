@@ -1,9 +1,5 @@
-import logging
 from pymongo import MongoClient
 from datetime import datetime,timedelta
-
-# Configure the logging module
-logging.basicConfig(filename='error.log', level=logging.ERROR)
 
 client = MongoClient('mongodb://localhost:27017')
 
@@ -12,20 +8,10 @@ users_collection = db_login.users
 
 db_bank = client.bank
 bank_collection = db_bank.assets
-
-
-# Find the document with ID 'bank_assets'
 bank_assets_record = bank_collection.find_one({'_id': 'bank_assets'})
+bank_assets = int(bank_assets_record.get('total_assets', 0))
 
-if bank_assets_record is not None:
-    try:
-        # Extract total_assets and convert to int
-        bank_assets = int(bank_assets_record.get('total_assets', 0))
-    except (TypeError, ValueError):
-        # Handle potential conversion errors (e.g., non-numeric value)
-        logging.error('Error converting total_assets to integer:', exc_info=True)
-else:
-    logging.error('Document with ID "bank_assets" not found in bank.assets collection.', exc_info=True)
+
 
 def update_worth(username, amount, action):
     user = users_collection.find_one({'user_name': username})
