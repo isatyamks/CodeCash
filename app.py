@@ -2,7 +2,7 @@ from functools import wraps
 from flask import Flask, render_template, request, redirect, url_for, flash, session
 from pymongo import MongoClient
 from datetime import datetime,timedelta
-import logic as logic
+import logic.logic1 as logic
 
 worth =0
 
