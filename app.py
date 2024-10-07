@@ -4,6 +4,8 @@ from pymongo import MongoClient
 from datetime import datetime
 
 import logic.logic1 as logic
+import logic.update_month as um
+
 
 app = Flask(__name__)
 app.secret_key = 'Ifsfss584'
@@ -95,7 +97,7 @@ def home():
 def next_month():
     username = session.get('user')
     if username:
-        logic.next_month(username)
+        um.next_month(username)
     return redirect(url_for('index'))
 
 @app.route('/stock', methods=['GET', 'POST'])

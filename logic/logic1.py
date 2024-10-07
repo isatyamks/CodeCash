@@ -38,6 +38,8 @@ def update_worth(username, amount, action):
     bank_collection.update_one({'_id': 'bank_assets'}, {'$set': {'total_assets': new_bank_assets}})
     return "Transaction successful"
 
+    
+
 
 
 
