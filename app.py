@@ -1,10 +1,10 @@
 from functools import wraps
-from flask import Flask, render_template, request, redirect, url_for, flash, session  # Make sure flash is imported
+from flask import Flask, render_template, request, redirect, url_for, flash, session  
 from pymongo import MongoClient
 from datetime import datetime
 
-import logic.logic1 as logic
-import logic.update_month as um
+
+from logic import fd,rd,loan,lumpsum,update_month,update_worth
 
 
 app = Flask(__name__)
@@ -97,7 +97,7 @@ def home():
 def next_month():
     username = session.get('user')
     if username:
-        um.next_month(username)
+        update_month.next_month(username)
     return redirect(url_for('index'))
 
 @app.route('/stock', methods=['GET', 'POST'])
