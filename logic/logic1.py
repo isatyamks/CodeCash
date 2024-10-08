@@ -9,7 +9,17 @@ users_collection = db_login.users
 db_bank = client.bank
 bank_collection = db_bank.assets
 bank_assets_record = bank_collection.find_one({'_id': 'bank_assets'})
-bank_assets = int(bank_assets_record.get('total_assets', 0))
+# bank_assets = int(bank_assets_record.get('total_assets', 0))
+
+# Check if the document exists
+if bank_assets_record:
+    # Safely get the 'total_assets' value, default to 0 if the key is not present
+    bank_assets = int(bank_assets_record.get('total_assets', 0))
+else:
+    # Handle the case where the document does not exist
+    bank_assets = 0
+
+print(f"Bank assets: {bank_assets}")
 
 
 

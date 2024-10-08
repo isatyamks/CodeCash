@@ -1,13 +1,24 @@
 from functools import wraps
 from flask import Flask, render_template, request, redirect, url_for, flash, session  # Make sure flash is imported
+from flask_wtf import CSRFProtect
 from pymongo import MongoClient
 from datetime import datetime
 
 import logic.logic1 as logic
+from forms.forms import LoginForm, SignInForm
 
 app = Flask(__name__)
-app.secret_key = 'Ifsfss584'
+
+# Changed the app.secret_key = 'Ifsfss584' to app.config['SECRET_KEY'] = 'Ifsfss584'
+# It follows the best practice amongst flask devs, and it's also extensible.
+app.config['SECRET_KEY'] = 'Ifsfss584'
 client = MongoClient('mongodb://localhost:27017')
+
+# initializing the CSRF instance
+csrf = CSRFProtect(app)
+
+# Ensure CSRF protection is enabled for all routes
+csrf.init_app(app)
 
 # Client database
 db = client.login
@@ -17,19 +28,24 @@ users_collection = db.users
 db_codecash = client.bank
 bank_collection = db_codecash['assets']
 
+
 def login_required(f):
     @wraps(f)
     def decorated_function(*args, **kwargs):
         if 'user' not in session:
             return redirect(url_for('login'))
         return f(*args, **kwargs)
+
     return decorated_function
+
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
-    if request.method == 'POST':
-        email = request.form['email']
-        password = request.form['password']
+    form = LoginForm()
+    if form.validate_on_submit():
+        # This gets the value of each field from the frontend
+        email = form.email.data
+        password = form.password.data
         user = users_collection.find_one({'email': email})
 
         if user and user['password'] == password:
@@ -38,14 +54,17 @@ def login():
         else:
             flash('Invalid email or password')  # Flash a message if login is incorrect
 
-    return render_template('login.html')
+    return render_template('login.html', form=form)
+
 
 @app.route('/signup', methods=['GET', 'POST'])
 def signup():
-    if request.method == 'POST':
-        user_name = request.form['user_name']
-        email = request.form['email']
-        password = request.form['password']
+    form = SignInForm()
+    if form.validate_on_submit():
+        # This gets the value of each field from the frontend
+        user_name = form.user_name.data
+        email = form.email.data
+        password = form.password.data
         signup_time = datetime.now()
 
         # Check if email already exists
@@ -69,7 +88,8 @@ def signup():
         session['user'] = user_name
         return redirect(url_for('index'))
 
-    return render_template('signup.html')
+    return render_template('signup.html', form=form)
+
 
 @app.route('/')
 @login_required
@@ -85,10 +105,12 @@ def index():
 
     return render_template('index.html', month_year=month_year, username=username, worth=worth, bank=bank_money)
 
+
 @app.route('/home')
 @login_required
 def home():
     return index()
+
 
 @app.route('/next_month', methods=['POST'])
 @login_required
@@ -97,6 +119,7 @@ def next_month():
     if username:
         logic.next_month(username)
     return redirect(url_for('index'))
+
 
 @app.route('/stock', methods=['GET', 'POST'])
 @login_required
@@ -107,6 +130,7 @@ def stock():
         if user:
             # Implement your stock buying logic here
             pass
+
 
 @app.route('/bank', methods=['GET', 'POST'])
 @login_required
@@ -126,7 +150,9 @@ def bank():
     loan = user.get('loan', 0)
     bank_money = bank_collection.find_one({'_id': 'bank_assets'}).get('total_assets', 0)
 
-    return render_template('bank.html', month_year=month_year, username=username, worth=worth, fd=fd, loan=loan, bank=bank_money)
+    return render_template('bank.html', month_year=month_year, username=username, worth=worth, fd=fd, loan=loan,
+                           bank=bank_money)
+
 
 @app.route('/leaderboard')
 @login_required
@@ -138,7 +164,9 @@ def leaderboard():
     worth = user.get('worth', 0)
     bank_money = bank_collection.find_one({'_id': 'bank_assets'}).get('total_assets', 0)
 
-    return render_template('leaderboard.html', users=users, user=user, username=session.get('user'), month_year=month_year, worth=worth, bank=bank_money)
+    return render_template('leaderboard.html', users=users, user=user, username=session.get('user'),
+                           month_year=month_year, worth=worth, bank=bank_money)
+
 
 if __name__ == '__main__':
     app.run(debug=True)
