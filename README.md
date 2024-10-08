@@ -11,10 +11,24 @@
 - **Competitive Environment**: Compete against others to become the top coding tycoon.
 
 ## Technologies Used
+ 
+ ### Programming Languages:
+- Python (for backend development)
+- JavaScript (for client-side interactivity)
+- HTML (for webpage structure and content)
+- CSS (for styling and design)
 
-- Programming Languages: [List the languages used, e.g., Python, JavaScript, etc.]
-- Frameworks: [List any frameworks used, e.g., Flask, React, etc.]
-- Database: [Mention the database if applicable, e.g., MongoDB, SQLite, etc.]
+ ### Frameworks:
+- Flask (for creating the web application and managing server-side routes and logic)
+
+### Database:
+MongoDB (used for storing user data, bank assets, and managing persistent information)
+
+### Libraries:
+
+- pymongo (for MongoDB interaction)
+- datetime (for date and time operations)
+- functools (for wrapping login-required functionality)
 
 ## Installation
 
