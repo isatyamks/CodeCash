@@ -16,7 +16,7 @@ warnings.filterwarnings("ignore")
 
 
 
-df = pd.read_csv('../input/all_stocks_5yr.csv')
+df = pd.read_csv('model\model_data\stock_market_data\stocks\A.csv')
 df.head()
 df.describe()
 
