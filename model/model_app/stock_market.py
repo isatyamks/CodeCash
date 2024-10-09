@@ -18,12 +18,9 @@ warnings.filterwarnings("ignore")
 
 df = pd.read_csv('../input/all_stocks_5yr.csv')
 df.head()
-# Brief Description of our dataset
 df.describe()
 
-# Replace the column name from name to ticks
 df = df.rename(columns={'Name': 'Ticks'})
 
-# Let's analyze some of the stocks.
 amzn = df.loc[df['Ticks'] == 'AMZN']
 amzn.head()
