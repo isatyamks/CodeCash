@@ -2,6 +2,8 @@ from functools import wraps
 from flask import Flask, render_template, request, redirect, url_for, flash, session  
 from pymongo import MongoClient
 from datetime import datetime
+from flask-wtf import CSRFProtect
+from flask-wtf.csrf import CSRFError
 
 
 from logic import fd,rd,loan,lumpsum,update_month,update_worth
@@ -11,6 +13,9 @@ app = Flask(__name__)
 app.secret_key = 'Ifsfss584'
 client = MongoClient('mongodb://localhost:27017')
 
+# CSRF protection
+csrf = CSRFProtect(app)
+
 # Client database
 db = client.login
 users_collection = db.users
@@ -18,6 +23,11 @@ users_collection = db.users
 # Bank data MongoDB datasets
 db_codecash = client.bank
 bank_collection = db_codecash['assets']
+
+# csrf error handling
+@app.errorhandler(CSRFError)
+def handle_csrf_error(e):
+    return render_template('csrf_error.html', reason=e.description), 400
 
 def login_required(f):
     @wraps(f)
