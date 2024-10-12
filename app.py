@@ -1,6 +1,5 @@
 from functools import wraps
 from flask import Flask, render_template, request, redirect, url_for, flash, session  # Make sure flash is imported
-from flask_wtf import CSRFProtect
 from pymongo import MongoClient
 from datetime import datetime
 
@@ -14,11 +13,6 @@ app = Flask(__name__)
 app.config['SECRET_KEY'] = 'Ifsfss584'
 client = MongoClient('mongodb://localhost:27017')
 
-# initializing the CSRF instance
-csrf = CSRFProtect(app)
-
-# Ensure CSRF protection is enabled for all routes
-csrf.init_app(app)
 
 # Client database
 db = client.login
