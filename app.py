@@ -2,8 +2,8 @@ from functools import wraps
 from flask import Flask, render_template, request, redirect, url_for, flash, session  
 from pymongo import MongoClient
 from datetime import datetime
-from flask-wtf import CSRFProtect
-from flask-wtf.csrf import CSRFError
+from flask_wtf import CSRFProtect
+from flask_wtf.csrf import CSRFError
 
 
 from logic import fd,rd,loan,lumpsum,update_month,update_worth
