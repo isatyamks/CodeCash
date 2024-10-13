@@ -1,9 +1,10 @@
 from functools import wraps
 from flask import Flask, render_template, request, redirect, url_for, flash, session  
+from werkzeug.security import generate_password_hash, check_password_hash
 from pymongo import MongoClient
 from datetime import datetime
-from flask-wtf import CSRFProtect
-from flask-wtf.csrf import CSRFError
+from flask_wtf import CSRFProtect
+from flask_wtf.csrf import CSRFError
 
 
 from logic import fd,rd,loan,lumpsum,update_month,update_worth
@@ -44,7 +45,7 @@ def login():
         password = request.form['password']
         user = users_collection.find_one({'email': email})
 
-        if user and user['password'] == password:
+        if user and check_password_hash(user['password'], password):
             session['user'] = user['user_name']
             return redirect(url_for('index'))
         else:
@@ -74,9 +75,10 @@ def signup():
         users_collection.insert_one({
             'user_name': user_name,
             'email': email,
-            'password': password,
+            'password': generate_password_hash(password),
             'signup_time': signup_time,
-            'worth': 0
+            'worth': 0,
+            'password_last_changed': signup_time  # Store password change time
         })
         session['user'] = user_name
         return redirect(url_for('index'))
@@ -151,6 +153,75 @@ def leaderboard():
     bank_money = bank_collection.find_one({'_id': 'bank_assets'}).get('total_assets', 0)
 
     return render_template('leaderboard.html', users=users, user=user, username=session.get('user'), month_year=month_year, worth=worth, bank=bank_money)
+
+@app.route('/settings', methods=['GET', 'POST'])
+@login_required
+def settings():
+    username = session.get('user')
+    user = users_collection.find_one({'user_name': username})
+
+    if not user:
+        flash('User not found.')
+        return redirect(url_for('login'))
+
+    if request.method == 'POST':
+        action = request.form.get('action')
+
+        if action == 'update_info':
+            new_email = request.form.get('email')
+            current_password = request.form.get('current_password')
+            new_password = request.form.get('password')
+
+            if not check_password_hash(user['password'], current_password):
+                last_changed_date = user.get('password_last_changed', None)
+                if last_changed_date:
+                    flash(f'Incorrect password. Your password was last changed on {last_changed_date.strftime("%B %d, %Y")}.')
+                else:
+                    flash('Incorrect password.')
+                return redirect(url_for('settings'))
+
+            if check_password_hash(user['password'], new_password):
+                flash('New password cannot be the same as the current password.')
+                return redirect(url_for('settings'))
+
+            updates = {}
+            if new_email and new_email != user['email']:
+                if users_collection.find_one({'email': new_email}):
+                    flash('Email already exists.')
+                else:
+                    updates['email'] = new_email
+
+            if new_password:
+                updates['password'] = generate_password_hash(new_password)
+                updates['password_last_changed'] = datetime.now()
+
+            if updates:
+                users_collection.update_one({'user_name': username}, {'$set': updates})
+                flash('Information updated successfully.')
+
+        elif action == 'delete_account':
+            password = request.form.get('password')
+
+            if check_password_hash(user['password'], password):
+                users_collection.delete_one({'user_name': username})
+                session.clear()
+                flash('Account deleted successfully.')
+                return redirect(url_for('login'))
+            else:
+                last_changed_date = user.get('password_last_changed', None)
+                if last_changed_date:
+                    flash(f'Incorrect password. Your password was last changed on {last_changed_date.strftime("%B %d, %Y")}.')
+                else:
+                    flash('Incorrect password.')
+                return redirect(url_for('settings'))
+
+        elif action == 'logout':
+            session.clear()
+            flash('Logged out successfully.')
+            return redirect(url_for('login'))
+
+    return render_template('settings.html', user=user)
+
 
 if __name__ == '__main__':
     app.run(debug=True)

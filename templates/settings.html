@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Settings</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles/settings.css') }}">
+</head>
+<body>
+    <div class="container">
+        <h1>Settings</h1>
+        
+        {% with messages = get_flashed_messages() %}
+            {% if messages %}
+                <ul class="messages">
+                    {% for message in messages %}
+                        <li>{{ message }}</li>
+                    {% endfor %}
+                </ul>
+            {% endif %}
+        {% endwith %}
+
+        <section class="update-info">
+            <h2>Update Information</h2>
+            <form method="POST" action="{{ url_for('settings') }}">
+                <input type="hidden" name="action" value="update_info">
+        
+                <div class="form-group">
+                    <label for="email">New Email:</label>
+                    <input type="email" id="email" name="email" value="{{ user.email if user else '' }}">
+                </div>
+        
+                <div class="form-group">
+                    <label for="current-password">Current Password:</label>
+                    <input type="password" id="current-password" name="current_password" required>
+                </div>
+        
+                <div class="form-group">
+                    <label for="new-password">New Password:</label>
+                    <input type="password" id="new-password" name="password" required>
+                </div>
+        
+                <button type="submit" class="btn">Update Information</button>
+            </form>
+        </section>
+        <section class="delete-account">
+            <h2>Delete Account</h2>
+            <form method="POST" action="{{ url_for('settings') }}" onsubmit="return confirm('Are you sure you want to delete your account? This action cannot be undone.');">
+                <input type="hidden" name="action" value="delete_account">
+                <div class="form-group">
+                    <label for="delete-password">Enter your password to delete your account:</label>
+                    <input type="password" id="delete-password" name="password" required>
+                </div>
+                <button type="submit" class="btn btn-danger">Delete Account</button>
+            </form>
+        </section>
+        <section class="logout">
+            <h2>Log Out</h2>
+            <form method="POST" action="{{ url_for('settings') }}">
+                <input type="hidden" name="action" value="logout">
+                <button type="submit" class="btn">Log Out</button>
+            </form>
+        </section>
+    </div>
+</body>
+</html>
