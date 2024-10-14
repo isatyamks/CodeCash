@@ -15,7 +15,7 @@ def get_bitcoin_price_in_inr():
     
     
     except requests.exceptions.RequestException as e:
-        print(f"Oops! There was a problem fetching the Bitcoin price: {e}")
+        print(f"problem fetching the Bitcoin price: {e}")
         return None
 
 
@@ -31,12 +31,12 @@ def convert_inr_to_bitcoin(inr_amount):
 if __name__ == "__main__":
     
     try:
-        inr_amount = int(input("Please enter the amount in Indian Rupees (INR) that you wish to convert to Bitcoin: "))
+        inr_amount = int(input("enter the amount: "))
         bitcoin_amount = convert_inr_to_bitcoin(inr_amount)
         
         if bitcoin_amount is not None:
-            print(f"Great! ₹{inr_amount} is equivalent to {bitcoin_amount:.8f} BTC.")
+            print(f"₹{inr_amount} is equivalent to {bitcoin_amount:.8f} BTC.")
         else:
-            print("Unfortunately, we couldn't complete the conversion. Please try again later.")
+            print("here is a api fetching error")
     except ValueError:
-        print("Hmm, it seems like you entered something that isn't a valid number. Please try again with a whole number for INR.")
+        print("here is a value error")
