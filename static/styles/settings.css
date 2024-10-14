@@ -1,15 +1,48 @@
 body {
     font-family: Arial, sans-serif;
-    line-height: 1.6;
     margin: 0;
     padding: 0;
-    background-color: #f4f4f4;
+    background-color: #f4f4f9;
+}
+
+.navbar {
+    background-color: #007bff;
+    color: white;
+    padding: 10px 20px;
+}
+
+.navbar-content {
+    display: flex;
+    justify-content: space-between;
+}
+
+.navbar-item {
+    margin: 0 10px;
+}
+
+.sidebar {
+    width: 200px;
+    background-color: #343a40;
+    color: white;
+    position: fixed;
+    height: 100%;
+    padding-top: 20px;
+}
+
+.sidebar a {
+    display: block;
+    color: white;
+    padding: 15px;
+    text-decoration: none;
+}
+
+.sidebar a:hover,
+.sidebar a.active {
+    background-color: #007bff;
 }
 
 .container {
-    width: 80%;
-    margin: auto;
-    overflow: hidden;
+    margin-left: 220px;
     padding: 20px;
 }
 
