@@ -1,6 +1,8 @@
 import requests
 
 def get_bitcoin_price_in_inr():
+   
+   #api fetched
     url = "https://api.coingecko.com/api/v3/simple/price?ids=bitcoin&vs_currencies=inr"
     
     try:
@@ -8,9 +10,14 @@ def get_bitcoin_price_in_inr():
         response.raise_for_status()
         data = response.json()
         return data.get('bitcoin', {}).get('inr')
+    
+    
+    
+    
     except requests.exceptions.RequestException as e:
         print(f"Oops! There was a problem fetching the Bitcoin price: {e}")
         return None
+
 
 def convert_inr_to_bitcoin(inr_amount):
     bitcoin_price_in_inr = get_bitcoin_price_in_inr()
@@ -22,6 +29,7 @@ def convert_inr_to_bitcoin(inr_amount):
         return None
 
 if __name__ == "__main__":
+    
     try:
         inr_amount = int(input("Please enter the amount in Indian Rupees (INR) that you wish to convert to Bitcoin: "))
         bitcoin_amount = convert_inr_to_bitcoin(inr_amount)
