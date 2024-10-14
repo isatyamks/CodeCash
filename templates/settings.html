@@ -1,25 +1,35 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Settings</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='styles/settings.css') }}">
-</head>
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Index</title>
+        <link rel="stylesheet" href="../static/styles/settings.css">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    </head>
+    <body>
+    
+    <div class="navbar">
+        <div class="navbar-content">
+            <span class="navbar-item">Username: {{ username }}</span>
+            <span class="navbar-item">Worth: Rs {{ worth }}</span>
+            <span class="navbar-item">Bank Data: Rs {{ bank }}</span>
+            <span class="navbar-item">{{ month_year }}</span>
+        </div>
+    </div>
+    
+    <div class="sidebar">
+        <a href="home" class="active"><i class="fas fa-home"></i> Home</a>
+        <a href="bank"><i class="fas fa-university"></i> Bank</a>
+        <a href="market"><i class="fas fa-store"></i> Market</a>
+        <a href="Statement"><i class="fas fa-chart-line"></i> Investment</a>
+        <a href="leaderboard"><i class="fas fa-trophy"></i> Leaderboard</a>
+        <a href="settings"><i class="fas fa-cog"></i> Settings</a>
+        <a href="wallet"><i class="fas fa-wallet"></i> Wallet</a>
+    </div>
 <body>
     <div class="container">
         <h1>Settings</h1>
-        
-        {% with messages = get_flashed_messages() %}
-            {% if messages %}
-                <ul class="messages">
-                    {% for message in messages %}
-                        <li>{{ message }}</li>
-                    {% endfor %}
-                </ul>
-            {% endif %}
-        {% endwith %}
-
         <section class="update-info">
             <h2>Update Information</h2>
             <form method="POST" action="{{ url_for('settings') }}">
@@ -27,7 +37,7 @@
         
                 <div class="form-group">
                     <label for="email">New Email:</label>
-                    <input type="email" id="email" name="email" value="{{ user.email if user else '' }}">
+                    <input type="email" id="email" name="email" value="{{ user.email if user else '' }}" required>
                 </div>
         
                 <div class="form-group">

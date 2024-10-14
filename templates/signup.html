@@ -10,7 +10,6 @@
     <div class="signup-container">
         <h2>Signup</h2>
         <form method="POST" action="{{ url_for('signup') }}">
-            {{ csrf_token() }} <!-- CSRF Token for protection -->
             <input type="text" name="user_name" placeholder="Username" required>
             <input type="email" name="email" placeholder="Email" required>
             <input type="password" name="password" placeholder="Set Password" required>

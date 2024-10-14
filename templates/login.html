@@ -9,25 +9,14 @@
 <body>
     <div class="login-container">
         <h2>Login</h2>
-
-        <!-- Flash Messages Section -->
-        {% with messages = get_flashed_messages() %}
-            {% if messages %}
-                <div class="flash-messages">
-                    {% for message in messages %}
-                        <p style="color: red;">{{ message }}</p>
-                    {% endfor %}
-                </div>
-            {% endif %}
-        {% endwith %}
-
+        {% if error %}
+            <p style="color: red;">{{ error }}</p>
+        {% endif %}
         <form method="POST" action="{{ url_for('login') }}">
-            {{ csrf_token() }} <!-- CSRF Token for protection -->
             <input type="email" name="email" placeholder="Email" required>
             <input type="password" name="password" placeholder="Password" required>
             <button type="submit">Login</button>
         </form>
-        
         <button class="signup-button" onclick="window.location.href='{{ url_for('signup') }}'">Sign Up</button>
     </div>
 </body>
