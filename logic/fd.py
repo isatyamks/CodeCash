@@ -1,4 +1,4 @@
-from logic.mongodb_database import bank_assets,users_collection,bank_collection,bank_assets_record
+#from logic.mongodb_database import bank_assets,users_collection,bank_collection,bank_assets_record
 from datetime import datetime,timedelta
 
 def fd(username, amount):

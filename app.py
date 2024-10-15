@@ -1,9 +1,8 @@
-
 from functools import wraps
 from flask import Flask, render_template, request, redirect, url_for, flash, session
 from pymongo import MongoClient
 from datetime import datetime,timedelta
-import logic
+import logic.logic1 as logic
 
 worth =0
 
@@ -32,6 +31,9 @@ def login_required(f):
         return f(*args, **kwargs)
     return decorated_function
 #---------------------------------------------------------------------------------------
+
+
+
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
@@ -106,7 +108,7 @@ def index():
 
 
 @app.route('/home')
-# @login_required
+@login_required
 def home():
     username = session.get('user')
     user = users_collection.find_one({'user_name': username})
@@ -127,16 +129,6 @@ def next_month():
         logic.next_month(username)
     return redirect(url_for('index'))
 
-
-@app.route('/stock',methods = ['GET','POST'])
-@login_required
-def stock():
-    username = session.get('user')
-    
-    if request.method == 'POST':
-        user = users_collection.find_one({'username': username})
-        if user:
-            amount = request
 
 @app.route('/bank', methods=['GET', 'POST'])
 @login_required
@@ -167,9 +159,8 @@ def bank():
     worth = user.get('worth', 0)
     fd = user.get('fd',0)
     loan =user.get('loan',0)
-    asset_document = bank_collection.find_one({'_id': 'bank_assets'})
-    bank_money = asset_document.get('total_assets') if asset_document else 0 
-    return render_template('bank.html', month_year=month_year, username=username, worth=worth,fd=fd,loan=loan,bank=bank_money)
+
+    return render_template('bank.html', month_year=month_year, username=username, worth=worth,fd=fd,loan=loan,bank=logic.bank_assets)
 
 
 @app.route('/leaderboard')
@@ -181,12 +172,8 @@ def leaderboard():
     current_date = user.get('current_date', datetime.now())
     month_year = current_date.strftime("%B-%Y")
     worth = user.get('worth', 0)  
-    asset_document = bank_collection.find_one({'_id': 'bank_assets'})
-    bank_money = asset_document.get('total_assets') 
-    return render_template('leaderboard.html', users=users,user=user,username=username,month_year=month_year,worth=worth,bank=bank_money)
+    return render_template('leaderboard.html', users=users,user=user,username=username,month_year=month_year,worth=worth,bank=logic.bank_assets)
 
-@app.route('/settings', methods=['GET', 'POST'])
-@login_required
 def settings():
     username = session.get('user')
     user = users_collection.find_one({'user_name': username})
@@ -252,8 +239,11 @@ def settings():
             return redirect(url_for('login'))
 
     return render_template('settings.html', user=user)
-
     
 if __name__ == '__main__':
     app.run(debug=True)
+
+
+
+
 
