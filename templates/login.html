@@ -13,9 +13,28 @@
             <p style="color: red;">{{ error }}</p>
         {% endif %}
         <form method="POST" action="{{ url_for('login') }}">
-            <input type="email" name="email" placeholder="Email" required>
-            <input type="password" name="password" placeholder="Password" required>
-            <button type="submit">Login</button>
+            {{ form.hidden_tag() }}
+            <div>
+                {{ form.email }}
+                {% if form.email.errors %}
+                <ul class="errors">
+                    {% for error in form.email.errors %}
+                        <li>{{ error }}</li>
+                    {% endfor %}
+                </ul>
+                {% endif %}
+            </div>
+            <div>
+                {{ form.password }}
+                {% if form.password.errors %}
+                    <ul class="errors">
+                        {% for error in form.password.errors %}
+                            <li>{{ error }}</li>
+                        {% endfor %}
+                    </ul>
+                {% endif %}
+            </div>
+                {{ form.submit }}
         </form>
         <button class="signup-button" onclick="window.location.href='{{ url_for('signup') }}'">Sign Up</button>
     </div>

@@ -1,3 +1,5 @@
+./
+__/
 ### Python ###
 # Byte-compiled / optimized / DLL files
 __pycache__/
@@ -169,4 +171,3 @@ poetry.toml
 
 # LSP config files
 pyrightconfig.json
-
