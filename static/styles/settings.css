@@ -1,0 +1,110 @@
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f4f4f9;
+}
+
+.navbar {
+    background-color: #007bff;
+    color: white;
+    padding: 10px 20px;
+}
+
+.navbar-content {
+    display: flex;
+    justify-content: space-between;
+}
+
+.navbar-item {
+    margin: 0 10px;
+}
+
+.sidebar {
+    width: 200px;
+    background-color: #343a40;
+    color: white;
+    position: fixed;
+    height: 100%;
+    padding-top: 20px;
+}
+
+.sidebar a {
+    display: block;
+    color: white;
+    padding: 15px;
+    text-decoration: none;
+}
+
+.sidebar a:hover,
+.sidebar a.active {
+    background-color: #007bff;
+}
+
+.container {
+    margin-left: 220px;
+    padding: 20px;
+}
+
+h1, h2 {
+    color: #333;
+}
+
+.messages {
+    list-style-type: none;
+    padding: 10px;
+    background-color: #e8e8e8;
+    border-radius: 5px;
+}
+
+.messages li {
+    color: #333;
+    margin-bottom: 5px;
+}
+
+.form-group {
+    margin-bottom: 15px;
+}
+
+label {
+    display: block;
+    margin-bottom: 5px;
+}
+
+input[type="email"],
+input[type="password"] {
+    width: 100%;
+    padding: 8px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+}
+
+.btn {
+    display: inline-block;
+    padding: 10px 15px;
+    background-color: #333;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.btn:hover {
+    background-color: #555;
+}
+
+.btn-danger {
+    background-color: #dc3545;
+}
+
+.btn-danger:hover {
+    background-color: #c82333;
+}
+
+section {
+    background-color: #fff;
+    margin-bottom: 20px;
+    padding: 20px;
+    border-radius: 5px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
